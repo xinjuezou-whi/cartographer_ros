@@ -359,7 +359,7 @@ Node::ComputeExpectedSensorIds(const TrajectoryOptions& options) const {
   std::set<SensorId> expected_topics;
   // Subscribe to all laser scan, multi echo laser scan, and point cloud topics.
   for (const std::string& topic :
-       ComputeRepeatedTopicNames(kLaserScanTopic, options.num_laser_scans)) {
+       ComputeRepeatedTopicNames(options.laser_topic, options.num_laser_scans)) {
     expected_topics.insert(SensorId{SensorType::RANGE, topic});
   }
   for (const std::string& topic : ComputeRepeatedTopicNames(
@@ -376,11 +376,11 @@ Node::ComputeExpectedSensorIds(const TrajectoryOptions& options) const {
       (node_options_.map_builder_options.use_trajectory_builder_2d() &&
        options.trajectory_builder_options.trajectory_builder_2d_options()
            .use_imu_data())) {
-    expected_topics.insert(SensorId{SensorType::IMU, kImuTopic});
+    expected_topics.insert(SensorId{SensorType::IMU, options.imu_topic});
   }
   // Odometry is optional.
   if (options.use_odometry) {
-    expected_topics.insert(SensorId{SensorType::ODOMETRY, kOdometryTopic});
+    expected_topics.insert(SensorId{SensorType::ODOMETRY, options.odom_topic});
   }
   // NavSatFix is optional.
   if (options.use_nav_sat) {
@@ -414,7 +414,7 @@ int Node::AddTrajectory(const TrajectoryOptions& options) {
 void Node::LaunchSubscribers(const TrajectoryOptions& options,
                              const int trajectory_id) {
   for (const std::string& topic :
-       ComputeRepeatedTopicNames(kLaserScanTopic, options.num_laser_scans)) {
+       ComputeRepeatedTopicNames(options.laser_topic, options.num_laser_scans)) {
     subscribers_[trajectory_id].push_back(
         {SubscribeWithHandler<sensor_msgs::LaserScan>(
              &Node::HandleLaserScanMessage, trajectory_id, topic, &node_handle_,
@@ -446,17 +446,17 @@ void Node::LaunchSubscribers(const TrajectoryOptions& options,
            .use_imu_data())) {
     subscribers_[trajectory_id].push_back(
         {SubscribeWithHandler<sensor_msgs::Imu>(&Node::HandleImuMessage,
-                                                trajectory_id, kImuTopic,
+                                                trajectory_id, options.imu_topic,
                                                 &node_handle_, this),
-         kImuTopic});
+         options.imu_topic});
   }
 
   if (options.use_odometry) {
     subscribers_[trajectory_id].push_back(
         {SubscribeWithHandler<nav_msgs::Odometry>(&Node::HandleOdometryMessage,
-                                                  trajectory_id, kOdometryTopic,
+                                                  trajectory_id, options.odom_topic,
                                                   &node_handle_, this),
-         kOdometryTopic});
+         options.odom_topic});
   }
   if (options.use_nav_sat) {
     subscribers_[trajectory_id].push_back(

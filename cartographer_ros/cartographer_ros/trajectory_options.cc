@@ -81,6 +81,13 @@ TrajectoryOptions CreateTrajectoryOptions(
         lua_parameter_dictionary->GetBool("ignore_out_of_order");
   } else {
     options.ignore_out_of_order_messages = false;
+  // WHI
+  options.laser_topic =
+      lua_parameter_dictionary->GetString("laser_topic");
+  options.odom_topic =
+      lua_parameter_dictionary->GetString("odom_topic");
+  options.imu_topic =
+      lua_parameter_dictionary->GetString("imu_topic");
   }
   CheckTrajectoryOptions(options);
   return options;

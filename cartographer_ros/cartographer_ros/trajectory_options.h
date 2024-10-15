@@ -46,6 +46,9 @@ struct TrajectoryOptions {
   double fixed_frame_pose_sampling_ratio;
   double imu_sampling_ratio;
   double landmarks_sampling_ratio;
+  std::string laser_topic{ "scan" }; // WHI
+  std::string odom_topic{ "odom" }; // WHI
+  std::string imu_topic{ "imu" }; // WHI
 };
 
 TrajectoryOptions CreateTrajectoryOptions(
