@@ -42,7 +42,7 @@ options = {
   imu_sampling_ratio = 1.,
   landmarks_sampling_ratio = 1.,
   laser_topic = "whi/scan",
-  odom_topic = "whi/NaviBOT/controller/base_controller/odom",
+  odom_topic = "whi/odometry/filtered",
   imu_topic = "whi/whi_imu/imu_data",
 }
 

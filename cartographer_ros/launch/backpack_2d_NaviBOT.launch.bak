@@ -4,7 +4,6 @@
   <arg name="robot_name" default="whi"/>
   <arg name="vehicle" default="L1"/>
   <arg name="vehicle_model" default="differential"/>
-  <arg name="fuse" default="true"/>
 
   <group ns="$(arg robot_name)">
     <!-- urdf and state publisher -->
@@ -16,12 +15,10 @@
     </node>
   </group>
 
-  <arg name="robot_lua" value="backpack_2d_NaviBOT_ekf.lua" if="$(arg fuse)"/>
-  <arg name="robot_lua" value="backpack_2d_NaviBOT.lua" unless="$(arg fuse)"/>
   <node name="cartographer_node" pkg="cartographer_ros"
       type="cartographer_node" args="
           -configuration_directory $(find cartographer_ros)/configuration_files
-          -configuration_basename $(arg robot_lua)"
+          -configuration_basename backpack_2d_NaviBOT.lua"
       output="screen">
   </node>
 
